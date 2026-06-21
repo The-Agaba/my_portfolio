@@ -1,0 +1,554 @@
+import { useEffect, useMemo, useRef, useState } from 'react'
+import profileImage from './img/c.png'
+import './styles/App.css'
+
+const navItems = [
+  { label: 'Home', id: 'hero' },
+  { label: 'Resume', id: 'resume' },
+  { label: 'Services', id: 'services' },
+  { label: 'Portfolio', id: 'portfolio' },
+  { label: 'Contact', id: 'contact' }
+]
+
+const resumeItems = [
+  {
+    title: 'BSc. Software Engineering',
+    place: 'University of Dodoma',
+    period: '2024 - Present',
+    desc: 'Currently studying software engineering and building practical projects alongside classes.'
+  },
+  {
+    title: 'Advanced Level',
+    place: 'Iyunga Technical',
+    period: '2022 - 2024',
+    desc: 'Computer Science and Mathematics.'
+  },
+  {
+    title: 'Ordinary Level',
+    place: 'Bukoba Secondary',
+    period: '2018 - 2021',
+    desc: 'Strong foundation in science and problem solving.'
+  }
+]
+
+const skillTracks = [
+  { name: 'Python', iconKey: 'Python', note: 'Backend and scripting' },
+  { name: 'JavaScript', iconKey: 'JavaScript', note: 'Frontend and interactions' },
+  { name: 'HTML / CSS', iconKey: 'HTML5', note: 'Responsive interfaces' },
+  { name: 'Java', iconKey: 'Java', note: 'Problem solving and OOP' },
+  { name: 'C++', iconKey: 'C++', note: 'Logical programming' },
+  { name: 'Git', iconKey: 'Git', note: 'Version control' }
+]
+
+const techBadges = [
+  { name: 'Python', label: 'Python', accent: '#3776ab' },
+  { name: 'JavaScript', label: 'JavaScript', accent: '#f7df1e' },
+  { name: 'React', label: 'React', accent: '#61dafb' },
+  { name: 'HTML5', label: 'HTML5', accent: '#e34f26' },
+  { name: 'CSS3', label: 'CSS3', accent: '#2965f1' },
+  { name: 'Java', label: 'Java', accent: '#f7a41d' },
+  { name: 'C++', label: 'C++', accent: '#00599c' },
+  { name: 'Git', label: 'Git', accent: '#f05032' }
+]
+
+const services = [
+  {
+    title: 'Portfolio websites',
+    text: 'Clean personal sites with premium spacing, strong typography, and a refined first impression.'
+  },
+  {
+    title: 'Product UI',
+    text: 'Simple interfaces for tools, dashboards, and internal systems that need clarity.'
+  },
+  {
+    title: 'Student tools',
+    text: 'Practical software ideas for offline learning and small community use cases.'
+  }
+]
+
+const projects = [
+  {
+    title: 'Offline learning tools',
+    text: 'Ideas and prototypes that help students keep learning without depending on constant internet access.'
+  },
+  {
+    title: 'Small business systems',
+    text: 'Simple web interfaces for orders, communication, and everyday business tasks.'
+  },
+  {
+    title: 'Frontend interfaces',
+    text: 'Responsive pages and dashboards with a clean layout and structured motion.'
+  }
+]
+
+function scrollToSection(id) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
+function EmailIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm8 7L5.5 7.5V17h13V7.5L12 12Zm0-1.5L17 7H7l5 3.5Z" />
+    </svg>
+  )
+}
+
+function GitHubIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 2a10 10 0 0 0-3.16 19.48c.5.09.68-.22.68-.48v-1.67c-2.78.6-3.37-1.17-3.37-1.17-.46-1.17-1.12-1.48-1.12-1.48-.92-.63.07-.61.07-.61 1.02.07 1.56 1.04 1.56 1.04.9 1.55 2.34 1.1 2.91.84.09-.66.35-1.1.64-1.35-2.22-.25-4.56-1.11-4.56-4.93 0-1.09.39-1.98 1.03-2.68-.1-.26-.45-1.3.1-2.71 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.9-1.29 2.74-1.02 2.74-1.02.56 1.41.21 2.45.1 2.71.64.7 1.03 1.59 1.03 2.68 0 3.83-2.34 4.68-4.57 4.93.36.31.67.92.67 1.86v2.76c0 .26.18.57.69.48A10 10 0 0 0 12 2Z" />
+    </svg>
+  )
+}
+
+function SunIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm0-5a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1Zm0 16a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1ZM4.22 5.64a1 1 0 0 1 1.41 0l1.42 1.42a1 1 0 1 1-1.42 1.41L4.22 7.05a1 1 0 0 1 0-1.41Zm12.73 12.73a1 1 0 0 1 1.41 0l1.42 1.42a1 1 0 0 1-1.42 1.41l-1.41-1.42a1 1 0 0 1 0-1.41ZM2 11h2a1 1 0 1 1 0 2H2a1 1 0 1 1 0-2Zm18 0h2a1 1 0 1 1 0 2h-2a1 1 0 1 1 0-2ZM5.64 19.78a1 1 0 0 1 0-1.41l1.42-1.42a1 1 0 1 1 1.41 1.42l-1.42 1.41a1 1 0 0 1-1.41 0Zm12.73-12.73a1 1 0 0 1 0-1.41l1.42-1.42a1 1 0 1 1 1.41 1.42l-1.42 1.41a1 1 0 0 1-1.41 0Z" />
+    </svg>
+  )
+}
+
+function MoonIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5a1 1 0 0 0-1.23 1.23 10.5 10.5 0 1 0 12 12 1 1 0 0 0-1.23-1.23Z" />
+    </svg>
+  )
+}
+
+function PythonIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M13.2 2.25c3.55 0 4.18 1.59 4.18 3.68v2.7h-6.19c-1.86 0-3.36 1.5-3.36 3.36v1.93H6.27c-2.08 0-3.77-.63-3.77-4.18 0-3.57 1.68-7.49 7.49-7.49h3.21Zm-3.52 2.24a1.08 1.08 0 1 0 0 2.16 1.08 1.08 0 0 0 0-2.16Z" />
+      <path d="M10.79 21.75c-3.55 0-4.18-1.59-4.18-3.68v-2.7h6.19c1.86 0 3.36-1.5 3.36-3.36v-1.93h1.62c2.08 0 3.77.63 3.77 4.18 0 3.57-1.68 7.49-7.49 7.49h-3.27Zm3.53-2.24a1.08 1.08 0 1 0 0-2.16 1.08 1.08 0 0 0 0 2.16Z" />
+    </svg>
+  )
+}
+
+function JavaScriptIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <rect x="2.5" y="2.5" width="19" height="19" rx="5" />
+      <path d="M8.9 8.4v5.9c0 1.46-.64 2.06-1.82 2.06-.55 0-1.1-.13-1.52-.36l.4-1.45c.22.1.52.21.83.21.34 0 .56-.19.56-.76V8.4h1.55Zm4.1 0h1.55v6.22h2.93v1.37H13v-7.59Zm1.55 8.3c0-.59.47-1.07 1.07-1.07.6 0 1.08.48 1.08 1.07 0 .6-.48 1.08-1.08 1.08a1.07 1.07 0 0 1-1.07-1.08Z" fill="currentColor" stroke="none" />
+    </svg>
+  )
+}
+
+function ReactIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="2.2" />
+      <ellipse cx="12" cy="12" rx="9.2" ry="3.8" fill="none" stroke="currentColor" strokeWidth="1.7" />
+      <ellipse cx="12" cy="12" rx="9.2" ry="3.8" fill="none" stroke="currentColor" strokeWidth="1.7" transform="rotate(60 12 12)" />
+      <ellipse cx="12" cy="12" rx="9.2" ry="3.8" fill="none" stroke="currentColor" strokeWidth="1.7" transform="rotate(-60 12 12)" />
+    </svg>
+  )
+}
+
+function HtmlIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 3.5h16l-1.55 17L12 22.5 5.55 20.5 4 3.5Zm4.12 6.2.2 2.2h6.36l-.14 1.6-2.06.56-2.07-.56-.12-1.24H8.18l.34 4.13 3.48.94 3.48-.94.45-5.1H8.12l-.14-1.6h8.04l.16-1.76H7.85l.27 1.77Z" />
+    </svg>
+  )
+}
+
+function CssIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 3.5h16l-1.45 16.54L12 22.5 5.45 20.04 4 3.5Zm4.08 6.2.22 2.18h6.37l-.14 1.57-2.05.57-2.07-.57-.13-1.25H8.14l.35 4.12 3.49.95 3.49-.95.44-5.06H8.06l-.15-1.6h8.02l.17-1.74H7.78l.3 1.78Z" fill="currentColor" stroke="none" opacity="0.92" />
+    </svg>
+  )
+}
+
+function JavaIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 2.75c1.55 1.4 2.44 2.94 2.44 4.06 0 1.08-.67 1.91-1.67 2.47 1.35-.03 2.42.38 3.1 1.02 1.37 1.3 1.48 3.67 1.48 4.7 0 1.64-.48 2.92-1.38 3.83-.9.9-2.22 1.35-3.96 1.35-1.95 0-3.42-.45-4.42-1.35-.97-.86-1.47-2.06-1.47-3.6 0-1.67.55-2.95 1.68-3.82.96-.74 2.25-1.09 3.87-1.07.66 0 1.18-.1 1.57-.3.42-.22.63-.55.63-1 0-.54-.28-1.14-.87-1.82C12.65 5.8 12.31 5.41 12 5v-2.25Z" />
+      <path d="M8.25 18.4c0 .54.16.95.49 1.24.33.28.83.43 1.49.43 1.01 0 1.67-.28 1.97-.83.3-.54.44-1.3.44-2.27 0-.46-.05-.89-.16-1.28-.1-.39-.35-.73-.74-1.04-.39-.31-.95-.47-1.67-.47-1.76 0-2.63.94-2.63 2.82 0 .52.03.95.11 1.28Z" fill="currentColor" stroke="none" opacity="0.9" />
+    </svg>
+  )
+}
+
+function CppIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 2.25 20.75 7v10L12 21.75 3.25 17V7L12 2.25Zm4.2 9.3h1.3V9.38h1.85V8.07H17.5V6.25h-1.3v1.82h-1.85v1.31h1.85v2.17Zm-8.22-1.2a2.74 2.74 0 0 1 1.01-2.15 3.84 3.84 0 0 1 2.47-.82c1.12 0 2.04.26 2.76.77l-.72 1.2c-.56-.4-1.2-.6-1.93-.6-.7 0-1.24.16-1.63.48-.4.32-.6.75-.6 1.3 0 .55.2.99.6 1.31.4.32.94.48 1.63.48.76 0 1.44-.2 2.03-.62l.75 1.18c-.77.55-1.76.83-2.97.83-1.06 0-1.95-.26-2.66-.78-.72-.53-1.08-1.23-1.08-2.08Z" />
+    </svg>
+  )
+}
+
+function GitIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M20.5 11.2 12.8 3.5a1.9 1.9 0 0 0-2.68 0l-1.62 1.62 2.4 2.4a2.26 2.26 0 0 1 2.86 2.86l2.3 2.3a2.26 2.26 0 1 1-1.36 1.26l-2.14-2.14v5.64a2.26 2.26 0 1 1-1.63 0V11.8a2.26 2.26 0 0 1-1.24-2.95L8.2 6.46 3.5 11.17a1.9 1.9 0 0 0 0 2.68l7.72 7.72a1.9 1.9 0 0 0 2.68 0l6.6-6.6a1.9 1.9 0 0 0 0-2.67Z" />
+    </svg>
+  )
+}
+
+const badgeIcons = {
+  Python: PythonIcon,
+  JavaScript: JavaScriptIcon,
+  React: ReactIcon,
+  HTML5: HtmlIcon,
+  CSS3: CssIcon,
+  Java: JavaIcon,
+  'C++': CppIcon,
+  Git: GitIcon
+}
+
+export default function App() {
+  const heroRef = useRef(null)
+  const portraitRef = useRef(null)
+  const themeTimersRef = useRef({ swap: null, clear: null })
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [theme, setTheme] = useState('dark')
+  const [themeTransition, setThemeTransition] = useState(null)
+  const [heroReady, setHeroReady] = useState(false)
+
+  const reducedMotion = useMemo(() => {
+    if (typeof window === 'undefined') return true
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  }, [])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    const storedTheme = window.localStorage.getItem('theme')
+    const preferredTheme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+    const nextTheme = storedTheme === 'light' || storedTheme === 'dark' ? storedTheme : preferredTheme
+
+    setTheme(nextTheme)
+  }, [])
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+    window.localStorage.setItem('theme', theme)
+  }, [theme])
+
+  useEffect(() => {
+    return () => {
+      window.clearTimeout(themeTimersRef.current.swap)
+      window.clearTimeout(themeTimersRef.current.clear)
+    }
+  }, [])
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setHeroReady(true))
+    return () => cancelAnimationFrame(frame)
+  }, [])
+
+  useEffect(() => {
+    const cards = Array.from(document.querySelectorAll('[data-reveal-card]'))
+    if (!cards.length) return undefined
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduced) {
+      cards.forEach((card) => card.classList.add('is-visible'))
+      return undefined
+    }
+
+    cards.forEach((card, index) => {
+      card.style.setProperty('--reveal-delay', `${index * 70}ms`)
+    })
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible')
+            observer.unobserve(entry.target)
+          }
+        })
+      },
+      { threshold: 0.16, rootMargin: '0px 0px -8% 0px' }
+    )
+
+    cards.forEach((card) => observer.observe(card))
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    if (reducedMotion) return undefined
+    const hero = heroRef.current
+    const portrait = portraitRef.current
+    if (!hero || !portrait) return undefined
+
+    let frame = 0
+
+    const reset = () => {
+      portrait.style.setProperty('--rx', '0deg')
+      portrait.style.setProperty('--ry', '0deg')
+      portrait.style.setProperty('--mx', '50%')
+      portrait.style.setProperty('--my', '50%')
+    }
+
+    const onMove = (event) => {
+      const rect = hero.getBoundingClientRect()
+      const x = (event.clientX - rect.left) / rect.width
+      const y = (event.clientY - rect.top) / rect.height
+
+      cancelAnimationFrame(frame)
+      frame = requestAnimationFrame(() => {
+        portrait.style.setProperty('--rx', `${((0.5 - y) * 10).toFixed(2)}deg`)
+        portrait.style.setProperty('--ry', `${((x - 0.5) * 12).toFixed(2)}deg`)
+        portrait.style.setProperty('--mx', `${(x * 100).toFixed(1)}%`)
+        portrait.style.setProperty('--my', `${(y * 100).toFixed(1)}%`)
+      })
+    }
+
+    hero.addEventListener('pointermove', onMove)
+    hero.addEventListener('pointerleave', reset)
+    reset()
+
+    return () => {
+      cancelAnimationFrame(frame)
+      hero.removeEventListener('pointermove', onMove)
+      hero.removeEventListener('pointerleave', reset)
+    }
+  }, [reducedMotion])
+
+  const toggleTheme = () => {
+    const nextTheme = theme === 'dark' ? 'light' : 'dark'
+
+    window.clearTimeout(themeTimersRef.current.swap)
+    window.clearTimeout(themeTimersRef.current.clear)
+
+    setThemeTransition(nextTheme)
+
+    themeTimersRef.current.swap = window.setTimeout(() => {
+      setTheme(nextTheme)
+    }, 360)
+
+    themeTimersRef.current.clear = window.setTimeout(() => {
+      setThemeTransition(null)
+    }, 900)
+  }
+
+  return (
+    <div className="page">
+      <div className={`theme-shift ${themeTransition ? `to-${themeTransition}` : ''} ${themeTransition ? 'is-active' : ''}`} aria-hidden="true" />
+      <header className="topbar">
+        <button className="brand" type="button" onClick={() => scrollToSection('hero')}>
+          <span>CA</span>
+          <strong>Collin Agaba Raymund</strong>
+        </button>
+
+        <nav id="site-nav" className={`nav ${menuOpen ? 'open' : ''}`}>
+          {navItems.map((item) => (
+            <a
+              key={item.id}
+              href={`#${item.id}`}
+              onClick={(event) => {
+                event.preventDefault()
+                scrollToSection(item.id)
+                setMenuOpen(false)
+              }}
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
+
+        <div className="topbar-actions">
+          <a className="btn small ghost icon-btn" href="mailto:collinraymund403@gmail.com" aria-label="Email Collin Agaba Raymund">
+            <EmailIcon />
+            <span>Email</span>
+          </a>
+          <button
+            className="btn small ghost icon-btn theme-toggle"
+            type="button"
+            onClick={toggleTheme}
+            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          >
+            {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+            <span>{theme === 'dark' ? 'Light' : 'Dark'}</span>
+          </button>
+          <button
+            className="menu-btn"
+            type="button"
+            aria-label="Toggle menu"
+            aria-controls="site-nav"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((value) => !value)}
+          >
+            <span />
+            <span />
+          </button>
+        </div>
+      </header>
+
+      <main>
+        <section className="hero" id="hero" ref={heroRef}>
+          <div className="hero-shell">
+            <div className="hero-left">
+              <p className={`eyebrow hero-animate ${heroReady ? 'is-visible' : ''}`} style={{ '--hero-delay': '0ms' }}>
+                Available for work
+              </p>
+              <h1 className={`hero-animate ${heroReady ? 'is-visible' : ''}`} style={{ '--hero-delay': '120ms' }}>
+                The-Agaba Portfolio
+              </h1>
+              <p className={`hero-subtitle hero-animate ${heroReady ? 'is-visible' : ''}`} style={{ '--hero-delay': '220ms' }}>
+                I build clean frontend websites and practical software tools.
+              </p>
+
+              <div className={`hero-actions hero-animate ${heroReady ? 'is-visible' : ''}`} style={{ '--hero-delay': '320ms' }}>
+                <button className="btn primary" type="button" onClick={() => scrollToSection('contact')}>
+                  Get in touch
+                </button>
+                <a className="btn secondary icon-btn" href="https://github.com/The-Agaba" target="_blank" rel="noreferrer" aria-label="Open GitHub profile">
+                  <GitHubIcon />
+                  GitHub
+                </a>
+              </div>
+            </div>
+
+            <div className={`hero-right hero-animate ${heroReady ? 'is-visible' : ''}`} style={{ '--hero-delay': '220ms' }}>
+              <div className="portrait-wrap" ref={portraitRef}>
+                <div className="portrait-bg" />
+                <div className="portrait-core">
+                  <div className="portrait-card">
+                    <img src={profileImage} alt="Collin Agaba Raymund portrait" className="portrait-image" />
+                  </div>
+                </div>
+                <div className="portrait-chip chip-top">Available for work</div>
+                <div className="portrait-chip chip-bottom">The-Agaba</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="ticker" aria-label="Capabilities">
+          <div className="ticker-track ticker-badges">
+            {Array.from({ length: 2 }).flatMap((_, cycleIndex) =>
+              techBadges.map(({ name, label, accent }, badgeIndex) => {
+                const Icon = badgeIcons[name]
+                return (
+                  <span className="tech-badge" key={`${cycleIndex}-${badgeIndex}-${name}`} style={{ '--badge-accent': accent }}>
+                    <span className="tech-badge-icon" aria-hidden="true">
+                      <Icon />
+                    </span>
+                    <span className="tech-badge-label">{label}</span>
+                  </span>
+                )
+              })
+            )}
+          </div>
+        </section>
+
+        <section className="section about-section" id="about">
+          <div className="section-title-wrap">
+            <p className="section-label">About Me</p>
+            <h2>I build practical digital tools with a minimal, polished presentation.</h2>
+          </div>
+
+          <div className="about-grid">
+            <p>
+              I&apos;m Collin Agaba Raymund, a software engineering student focused on useful products, clean interfaces, and thoughtful interaction.
+            </p>
+            <p>
+              My work is aimed at student learning, small business tools, and frontend experiences that feel finished instead of cluttered.
+            </p>
+          </div>
+        </section>
+
+        <section className="section" id="resume">
+          <div className="section-title-wrap">
+            <p className="section-label">Resume</p>
+            <h2>Education and direction.</h2>
+          </div>
+
+          <div className="resume-list">
+            {resumeItems.map((item) => (
+              <article className="resume-item" data-reveal-card key={item.title}>
+                <div className="resume-period">{item.period}</div>
+                <div className="resume-body">
+                  <h3>{item.title}</h3>
+                  <p className="resume-place">{item.place}</p>
+                  <p>{item.desc}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="section" id="skills">
+          <div className="section-title-wrap">
+            <p className="section-label">Skills & technologies</p>
+            <h2>Tech stack, shown as badges.</h2>
+          </div>
+
+          <div className="skill-badge-grid">
+            {skillTracks.map((skill) => {
+              const Icon = badgeIcons[skill.iconKey]
+              return (
+                <article className="skill-badge-card" data-reveal-card key={skill.name}>
+                  <div className="skill-badge-head">
+                    <span className="tech-badge-icon" aria-hidden="true">
+                      <Icon />
+                    </span>
+                    <h3>{skill.name}</h3>
+                  </div>
+                  <p>{skill.note}</p>
+                </article>
+              )
+            })}
+          </div>
+        </section>
+
+        <section className="section" id="services">
+          <div className="section-title-wrap">
+            <p className="section-label">Services</p>
+            <h2>What I can help with.</h2>
+          </div>
+
+          <div className="service-grid">
+            {services.map((service) => (
+              <article className="service-card" data-reveal-card key={service.title}>
+                <h3>{service.title}</h3>
+                <p>{service.text}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="section" id="portfolio">
+          <div className="section-title-wrap">
+            <p className="section-label">Portfolio</p>
+            <h2>Selected direction.</h2>
+          </div>
+
+          <div className="portfolio-grid">
+            {projects.map((project) => (
+              <article className="portfolio-card" data-reveal-card key={project.title}>
+                <h3>{project.title}</h3>
+                <p>{project.text}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="section contact-section" id="contact">
+          <div className="contact-panel">
+            <div className="section-title-wrap">
+              <p className="section-label">Contact</p>
+              <h2>Get in touch.</h2>
+            </div>
+
+            <div className="contact-links">
+              <a className="icon-btn" data-reveal-card href="mailto:collinraymund403@gmail.com" aria-label="Email Collin Agaba Raymund">
+                <EmailIcon />
+                <span>Email</span>
+              </a>
+              <a className="icon-btn" data-reveal-card href="https://github.com/The-Agaba" target="_blank" rel="noreferrer" aria-label="Open GitHub profile">
+                <GitHubIcon />
+                <span>GitHub</span>
+              </a>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  )
+}
