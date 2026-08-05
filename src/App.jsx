@@ -33,10 +33,10 @@ const resumeItems = [
 
 const skillTracks = [
   { name: 'Python', iconKey: 'Python', note: 'Backend and scripting' },
-  { name: 'JavaScript', iconKey: 'JavaScript', note: 'Frontend and interactions' },
-  { name: 'HTML / CSS', iconKey: 'HTML5', note: 'Responsive interfaces' },
-  { name: 'Java', iconKey: 'Java', note: 'Problem solving and OOP' },
-  { name: 'C++', iconKey: 'C++', note: 'Logical programming' },
+  { name: 'JavaScript', iconKey: 'JavaScript', note: 'Interactive web pages' },
+  { name: 'HTML / CSS', iconKey: 'HTML5', note: 'Layout and styling' },
+  { name: 'Java', iconKey: 'Java', note: 'Object-oriented code' },
+  { name: 'C++', iconKey: 'C++', note: 'Logic and algorithms' },
   { name: 'Git', iconKey: 'Git', note: 'Version control' }
 ]
 
@@ -54,30 +54,30 @@ const techBadges = [
 const services = [
   {
     title: 'Portfolio websites',
-    text: 'Clean personal sites with premium spacing, strong typography, and a refined first impression.'
+    text: 'Personal sites with clear structure, clean spacing, and a simple first impression.'
   },
   {
     title: 'Product UI',
-    text: 'Simple interfaces for tools, dashboards, and internal systems that need clarity.'
+    text: 'Interfaces for tools, dashboards, and small internal systems that need clarity.'
   },
   {
     title: 'Student tools',
-    text: 'Practical software ideas for offline learning and small community use cases.'
+    text: 'Useful software ideas for study, organization, and everyday workflows.'
   }
 ]
 
 const projects = [
   {
     title: 'Offline learning tools',
-    text: 'Ideas and prototypes that help students keep learning without depending on constant internet access.'
+    text: 'Ideas and prototypes that help students keep learning offline or with weak connections.'
   },
   {
     title: 'Small business systems',
-    text: 'Simple web interfaces for orders, communication, and everyday business tasks.'
+    text: 'Simple web tools for orders, messaging, and everyday business tasks.'
   },
   {
     title: 'Frontend interfaces',
-    text: 'Responsive pages and dashboards with a clean layout and structured motion.'
+    text: 'Responsive pages and dashboards with clean layout and smooth motion.'
   }
 ]
 
@@ -332,7 +332,7 @@ export default function App() {
       <header className="topbar">
         <button className="brand" type="button" onClick={() => scrollToSection('hero')}>
           <span>CA</span>
-          <strong>Collin Agaba Raymund</strong>
+          <strong>Colin Raymond</strong>
         </button>
 
         <nav id="site-nav" className={`nav ${menuOpen ? 'open' : ''}`}>
@@ -387,10 +387,10 @@ export default function App() {
                 Available for work
               </p>
               <h1 className={`hero-animate ${heroReady ? 'is-visible' : ''}`} style={{ '--hero-delay': '120ms' }}>
-                The-Agaba Portfolio
+                Colin Raymond
               </h1>
               <p className={`hero-subtitle hero-animate ${heroReady ? 'is-visible' : ''}`} style={{ '--hero-delay': '220ms' }}>
-                I build clean frontend websites and practical software tools.
+                I build clean websites and practical software tools.
               </p>
 
               <div className={`hero-actions hero-animate ${heroReady ? 'is-visible' : ''}`} style={{ '--hero-delay': '320ms' }}>
@@ -440,15 +440,15 @@ export default function App() {
         <section className="section about-section" id="about">
           <div className="section-title-wrap">
             <p className="section-label">About Me</p>
-            <h2>I build practical digital tools with a minimal, polished presentation.</h2>
+            <h2>I build websites and tools that are easy to use.</h2>
           </div>
 
           <div className="about-grid">
             <p>
-              I&apos;m Collin Agaba Raymund, a software engineering student focused on useful products, clean interfaces, and thoughtful interaction.
+              I&apos;m Collin Agaba Raymund, a software engineering student who likes clear layouts, smooth motion, and useful features.
             </p>
             <p>
-              My work is aimed at student learning, small business tools, and frontend experiences that feel finished instead of cluttered.
+              I focus on personal sites, small tools, and frontend experiences that feel complete.
             </p>
           </div>
         </section>
@@ -456,7 +456,7 @@ export default function App() {
         <section className="section" id="resume">
           <div className="section-title-wrap">
             <p className="section-label">Resume</p>
-            <h2>Education and direction.</h2>
+            <h2>Education.</h2>
           </div>
 
           <div className="resume-list">
@@ -475,8 +475,8 @@ export default function App() {
 
         <section className="section" id="skills">
           <div className="section-title-wrap">
-            <p className="section-label">Skills & technologies</p>
-            <h2>Tech stack, shown as badges.</h2>
+            <p className="section-label">Tools</p>
+            <h2>Tools I use.</h2>
           </div>
 
           <div className="skill-badge-grid">
@@ -500,7 +500,7 @@ export default function App() {
         <section className="section" id="services">
           <div className="section-title-wrap">
             <p className="section-label">Services</p>
-            <h2>What I can help with.</h2>
+            <h2>What I can build.</h2>
           </div>
 
           <div className="service-grid">
@@ -515,8 +515,8 @@ export default function App() {
 
         <section className="section" id="portfolio">
           <div className="section-title-wrap">
-            <p className="section-label">Portfolio</p>
-            <h2>Selected direction.</h2>
+            <p className="section-label">Work</p>
+            <h2>Selected work.</h2>
           </div>
 
           <div className="portfolio-grid">
@@ -533,7 +533,7 @@ export default function App() {
           <div className="contact-panel">
             <div className="section-title-wrap">
               <p className="section-label">Contact</p>
-              <h2>Get in touch.</h2>
+              <h2>Let&apos;s talk.</h2>
             </div>
 
             <div className="contact-links">

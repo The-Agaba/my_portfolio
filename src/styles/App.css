@@ -254,7 +254,7 @@
 }
 
 .hero-left h1 {
-  max-width: 9ch;
+  max-width: 13ch;
   font-size: clamp(3.9rem, 8vw, 7rem);
   line-height: 0.9;
 }
@@ -578,7 +578,7 @@
 
 .about-grid p,
 .resume-item p,
-.skill-card span,
+.skill-badge-card p,
 .service-card p,
 .portfolio-card p,
 .contact-links a {
