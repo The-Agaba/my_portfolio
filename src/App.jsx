@@ -212,7 +212,6 @@ export default function App() {
   const [themeTransition, setThemeTransition] = useState(null)
   const [heroReady, setHeroReady] = useState(false)
   const [activeSection, setActiveSection] = useState('hero')
-  const [emailCopied, setEmailCopied] = useState(false)
 
   const reducedMotion = useMemo(() => {
     if (typeof window === 'undefined') return true
@@ -364,16 +363,6 @@ export default function App() {
     themeTimersRef.current.clear = window.setTimeout(() => {
       setThemeTransition(null)
     }, 900)
-  }
-
-  const copyEmail = async () => {
-    try {
-      await navigator.clipboard.writeText('collinraymund403@gmail.com')
-      setEmailCopied(true)
-      window.setTimeout(() => setEmailCopied(false), 2200)
-    } catch {
-      window.location.href = 'mailto:collinraymund403@gmail.com'
-    }
   }
 
   return (
@@ -599,10 +588,10 @@ export default function App() {
             </div>
 
             <div className="contact-links">
-              <button className="icon-btn" data-reveal-card type="button" onClick={copyEmail} aria-label="Copy Collin Agaba Raymund email address">
+              <a className="icon-btn" data-reveal-card href="mailto:collinraymund403@gmail.com" aria-label="Email Collin Agaba Raymund">
                 <EmailIcon />
-                <span>{emailCopied ? 'Copied!' : 'Copy email'}</span>
-              </button>
+                <span>Email</span>
+              </a>
               <a className="icon-btn" data-reveal-card href="https://github.com/The-Agaba" target="_blank" rel="noreferrer" aria-label="Open GitHub profile">
                 <GitHubIcon />
                 <span>GitHub</span>
@@ -619,3 +608,4 @@ export default function App() {
     </div>
   )
 }
+
