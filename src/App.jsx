@@ -4,7 +4,9 @@ import './styles/App.css'
 
 const navItems = [
   { label: 'Home', id: 'hero' },
+  { label: 'About', id: 'about' },
   { label: 'Resume', id: 'resume' },
+  { label: 'Skills', id: 'skills' },
   { label: 'Services', id: 'services' },
   { label: 'Portfolio', id: 'portfolio' },
   { label: 'Contact', id: 'contact' }
@@ -69,15 +71,18 @@ const services = [
 const projects = [
   {
     title: 'Offline learning tools',
-    text: 'Ideas and prototypes that help students keep learning offline or with weak connections.'
+    text: 'Ideas and prototypes that help students keep learning offline or with weak connections.',
+    tags: ['Product thinking', 'Accessibility']
   },
   {
     title: 'Small business systems',
-    text: 'Simple web tools for orders, messaging, and everyday business tasks.'
+    text: 'Simple web tools for orders, messaging, and everyday business tasks.',
+    tags: ['Web apps', 'Workflows']
   },
   {
     title: 'Frontend interfaces',
-    text: 'Responsive pages and dashboards with clean layout and smooth motion.'
+    text: 'Responsive pages and dashboards with clean layout and smooth motion.',
+    tags: ['React', 'Motion']
   }
 ]
 
@@ -206,6 +211,8 @@ export default function App() {
   const [theme, setTheme] = useState('dark')
   const [themeTransition, setThemeTransition] = useState(null)
   const [heroReady, setHeroReady] = useState(false)
+  const [activeSection, setActiveSection] = useState('hero')
+  const [emailCopied, setEmailCopied] = useState(false)
 
   const reducedMotion = useMemo(() => {
     if (typeof window === 'undefined') return true
@@ -221,6 +228,39 @@ export default function App() {
 
     setTheme(nextTheme)
   }, [])
+
+  useEffect(() => {
+    const sections = navItems
+      .map(({ id }) => document.getElementById(id))
+      .filter(Boolean)
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach((entry) => entry.isIntersecting && setActiveSection(entry.target.id)),
+      { rootMargin: '-35% 0px -55% 0px', threshold: 0 }
+    )
+    sections.forEach((section) => observer.observe(section))
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const updateProgress = () => {
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight
+      const progress = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0
+      document.documentElement.style.setProperty('--scroll-progress', `${progress}%`)
+    }
+    updateProgress()
+    window.addEventListener('scroll', updateProgress, { passive: true })
+    return () => window.removeEventListener('scroll', updateProgress)
+  }, [])
+
+  useEffect(() => {
+    if (reducedMotion) return undefined
+    const updateSpotlight = (event) => {
+      document.documentElement.style.setProperty('--cursor-x', `${event.clientX}px`)
+      document.documentElement.style.setProperty('--cursor-y', `${event.clientY}px`)
+    }
+    window.addEventListener('pointermove', updateSpotlight, { passive: true })
+    return () => window.removeEventListener('pointermove', updateSpotlight)
+  }, [reducedMotion])
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
@@ -326,9 +366,20 @@ export default function App() {
     }, 900)
   }
 
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText('collinraymund403@gmail.com')
+      setEmailCopied(true)
+      window.setTimeout(() => setEmailCopied(false), 2200)
+    } catch {
+      window.location.href = 'mailto:collinraymund403@gmail.com'
+    }
+  }
+
   return (
     <div className="page">
       <div className={`theme-shift ${themeTransition ? `to-${themeTransition}` : ''} ${themeTransition ? 'is-active' : ''}`} aria-hidden="true" />
+      <div className="scroll-progress" aria-hidden="true" />
       <header className="topbar">
         <button className="brand" type="button" onClick={() => scrollToSection('hero')}>
           <span>CA</span>
@@ -346,7 +397,7 @@ export default function App() {
                 setMenuOpen(false)
               }}
             >
-              {item.label}
+              <span className={activeSection === item.id ? 'is-active' : ''}>{item.label}</span>
             </a>
           ))}
         </nav>
@@ -394,13 +445,17 @@ export default function App() {
               </p>
 
               <div className={`hero-actions hero-animate ${heroReady ? 'is-visible' : ''}`} style={{ '--hero-delay': '320ms' }}>
-                <button className="btn primary" type="button" onClick={() => scrollToSection('contact')}>
-                  Get in touch
+              <button className="btn primary" type="button" onClick={() => scrollToSection('contact')}>
+                Get in touch
                 </button>
                 <a className="btn secondary icon-btn" href="https://github.com/The-Agaba" target="_blank" rel="noreferrer" aria-label="Open GitHub profile">
                   <GitHubIcon />
                   GitHub
                 </a>
+              </div>
+              <div className="hero-proof" aria-label="Portfolio highlights">
+                <span><strong>01</strong> curious builder</span>
+                <span><strong>24/7</strong> learning mindset</span>
               </div>
             </div>
 
@@ -450,6 +505,11 @@ export default function App() {
             <p>
               I focus on personal sites, small tools, and frontend experiences that feel complete.
             </p>
+          </div>
+          <div className="about-highlights">
+            <div><strong>01</strong><span>Student developer</span></div>
+            <div><strong>06</strong><span>Core technologies</span></div>
+            <div><strong>∞</strong><span>Ideas to explore</span></div>
           </div>
         </section>
 
@@ -522,8 +582,10 @@ export default function App() {
           <div className="portfolio-grid">
             {projects.map((project) => (
               <article className="portfolio-card" data-reveal-card key={project.title}>
+                <span className="project-number">0{projects.indexOf(project) + 1}</span>
                 <h3>{project.title}</h3>
                 <p>{project.text}</p>
+                <div className="project-tags">{project.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
               </article>
             ))}
           </div>
@@ -537,10 +599,10 @@ export default function App() {
             </div>
 
             <div className="contact-links">
-              <a className="icon-btn" data-reveal-card href="mailto:collinraymund403@gmail.com" aria-label="Email Collin Agaba Raymund">
+              <button className="icon-btn" data-reveal-card type="button" onClick={copyEmail} aria-label="Copy Collin Agaba Raymund email address">
                 <EmailIcon />
-                <span>Email</span>
-              </a>
+                <span>{emailCopied ? 'Copied!' : 'Copy email'}</span>
+              </button>
               <a className="icon-btn" data-reveal-card href="https://github.com/The-Agaba" target="_blank" rel="noreferrer" aria-label="Open GitHub profile">
                 <GitHubIcon />
                 <span>GitHub</span>
@@ -549,6 +611,11 @@ export default function App() {
           </div>
         </section>
       </main>
+      <footer className="site-footer">
+        <span>© {new Date().getFullYear()} Colin Raymond</span>
+        <span>Built with curiosity, React, and clean interfaces.</span>
+        <a href="https://github.com/The-Agaba/my_portfolio" target="_blank" rel="noreferrer">View source on GitHub ↗</a>
+      </footer>
     </div>
   )
 }

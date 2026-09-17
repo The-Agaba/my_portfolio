@@ -34,6 +34,8 @@
   --accent: #ffffff;
   --accent-2: #d6dce7;
   --radius: 26px;
+  --cursor-x: 50vw;
+  --cursor-y: 20vh;
 }
 
 :root[data-theme='light'] {
@@ -85,6 +87,18 @@ body {
     radial-gradient(circle at top right, rgba(255, 255, 255, 0.05), transparent 25%),
     linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
   color: var(--text);
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(420px circle at var(--cursor-x) var(--cursor-y), rgba(97, 218, 251, 0.08), transparent 70%);
+  transition: background 160ms ease;
 }
 
 a {
