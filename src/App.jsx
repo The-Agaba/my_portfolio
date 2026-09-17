@@ -372,7 +372,7 @@ export default function App() {
       <header className="topbar">
         <button className="brand" type="button" onClick={() => scrollToSection('hero')}>
           <span>CA</span>
-          <strong>Colin Raymond</strong>
+          <strong>Colin Raymund</strong>
         </button>
 
         <nav id="site-nav" className={`nav ${menuOpen ? 'open' : ''}`}>
@@ -427,7 +427,7 @@ export default function App() {
                 Available for work
               </p>
               <h1 className={`hero-animate ${heroReady ? 'is-visible' : ''}`} style={{ '--hero-delay': '120ms' }}>
-                Colin Raymond
+                Colin Raymund
               </h1>
               <p className={`hero-subtitle hero-animate ${heroReady ? 'is-visible' : ''}`} style={{ '--hero-delay': '220ms' }}>
                 I build clean websites and practical software tools.
@@ -601,7 +601,7 @@ export default function App() {
         </section>
       </main>
       <footer className="site-footer">
-        <span>© {new Date().getFullYear()} Colin Raymond</span>
+        <span>© {new Date().getFullYear()} Colin Raymund</span>
         <span>Built with curiosity, React, and clean interfaces.</span>
         <a href="https://github.com/The-Agaba/my_portfolio" target="_blank" rel="noreferrer">View source on GitHub ↗</a>
       </footer>
