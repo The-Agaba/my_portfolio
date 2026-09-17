@@ -353,19 +353,8 @@ export default function App() {
         if (!response.ok) throw new Error('GitHub repositories could not be loaded')
         const repositories = await response.json()
         const visibleRepos = repositories.filter((repo) => !repo.fork && !repo.archived)
-        const projectsWithReadmes = await Promise.all(visibleRepos.map(async (repo) => {
-          try {
-            const readmeResponse = await fetch(`https://api.github.com/repos/${repo.full_name}/readme`)
-            if (!readmeResponse.ok) return { ...repo, readme: '' }
-            const readme = await readmeResponse.json()
-            const markdown = atob(readme.content.replaceAll('\n', ''))
-            return { ...repo, readme: decodeURIComponent(escape(markdown)) }
-          } catch {
-            return { ...repo, readme: '' }
-          }
-        }))
         if (!cancelled) {
-          setGithubRepos(projectsWithReadmes)
+          setGithubRepos(visibleRepos)
           setGithubState('ready')
         }
       } catch {
@@ -733,7 +722,7 @@ export default function App() {
             <p className="section-label">Live from GitHub</p>
             <h2>Every project, in one place.</h2>
           </div>
-          <p className="github-intro">A live collection of my public repositories, with each README available to explore without leaving this portfolio.</p>
+          <p className="github-intro">A live collection of my public repositories, with a quick overview of what I have built.</p>
           {githubState === 'loading' && <div className="github-status" role="status"><span className="status-pulse" /> Loading repositories from GitHub…</div>}
           {githubState === 'error' && <div className="github-status error" role="alert">GitHub is temporarily unavailable. <a href="https://github.com/The-Agaba" target="_blank" rel="noreferrer">Browse the profile directly ↗</a></div>}
           {githubState === 'ready' && (
@@ -747,7 +736,6 @@ export default function App() {
                   <div className="repo-meta"><span>★ {repo.stargazers_count}</span><span>⑂ {repo.forks_count}</span><span>Updated {new Date(repo.updated_at).toLocaleDateString()}</span></div>
                   <div className="repo-actions">
                     <a className="btn small secondary" href={repo.html_url} target="_blank" rel="noreferrer">View repository ↗</a>
-                    {repo.readme && <details><summary>Read README</summary><div className="readme-content">{renderMarkdown(repo.readme)}</div></details>}
                   </div>
                 </article>
               ))}
