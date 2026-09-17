@@ -9,6 +9,7 @@ const navItems = [
   { label: 'Skills', id: 'skills' },
   { label: 'Services', id: 'services' },
   { label: 'Portfolio', id: 'portfolio' },
+  { label: 'GitHub', id: 'github' },
   { label: 'Contact', id: 'contact' }
 ]
 
@@ -43,15 +44,28 @@ const skillTracks = [
 ]
 
 const techBadges = [
-  { name: 'Python', label: 'Python', accent: '#3776ab' },
-  { name: 'JavaScript', label: 'JavaScript', accent: '#f7df1e' },
-  { name: 'React', label: 'React', accent: '#61dafb' },
-  { name: 'HTML5', label: 'HTML5', accent: '#e34f26' },
-  { name: 'CSS3', label: 'CSS3', accent: '#2965f1' },
-  { name: 'Java', label: 'Java', accent: '#f7a41d' },
-  { name: 'C++', label: 'C++', accent: '#00599c' },
-  { name: 'Git', label: 'Git', accent: '#f05032' }
+  { name: 'Python', label: 'Python', accent: '#3776ab', icon: 'python' },
+  { name: 'JavaScript', label: 'JavaScript', accent: '#f7df1e', icon: 'javascript' },
+  { name: 'React', label: 'React', accent: '#61dafb', icon: 'react' },
+  { name: 'HTML5', label: 'HTML5', accent: '#e34f26', icon: 'html5' },
+  { name: 'CSS3', label: 'CSS3', accent: '#2965f1', icon: 'css3' },
+  { name: 'Java', label: 'Java', accent: '#f7a41d', icon: 'java' },
+  { name: 'C++', label: 'C++', accent: '#00599c', icon: 'cplusplus' },
+  { name: 'Git', label: 'Git', accent: '#f05032', icon: 'git' }
 ]
+
+const officialIcons = {
+  python: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg',
+  javascript: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg',
+  react: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg',
+  html5: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg',
+  css3: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg',
+  java: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg',
+  cplusplus: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg',
+  git: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg'
+}
+
+const whatsappUrl = 'https://wa.me/255757219157'
 
 const services = [
   {
@@ -94,6 +108,14 @@ function EmailIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <path d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm8 7L5.5 7.5V17h13V7.5L12 12Zm0-1.5L17 7H7l5 3.5Z" />
+    </svg>
+  )
+}
+
+function WhatsAppIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M20.5 3.5A11.85 11.85 0 0 0 12.08 0C5.53 0 .2 5.32.2 11.87c0 2.09.55 4.13 1.59 5.93L.1 23.8l6.16-1.62a11.87 11.87 0 0 0 5.82 1.52h.01c6.54 0 11.87-5.32 11.87-11.87 0-3.17-1.23-6.14-3.46-8.33Zm-8.42 18.2h-.01a9.84 9.84 0 0 1-5.02-1.38l-.36-.21-3.66.96.98-3.56-.23-.37a9.82 9.82 0 0 1-1.51-5.27C2.27 6.46 6.67 2.06 12.09 2.06c2.63 0 5.1 1.03 6.96 2.89a9.78 9.78 0 0 1 2.88 6.97c0 5.42-4.41 9.82-9.85 9.82Zm5.39-7.36c-.3-.15-1.77-.87-2.05-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.76-1.66-2.06-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.49s1.07 2.89 1.22 3.09c.15.2 2.1 3.2 5.09 4.49.71.31 1.27.49 1.71.63.72.23 1.38.2 1.9.12.58-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.2-.57-.35Z" />
     </svg>
   )
 }
@@ -192,6 +214,10 @@ function GitIcon() {
   )
 }
 
+function OfficialTechIcon({ icon, label }) {
+  return <img src={officialIcons[icon]} alt={`${label} official icon`} loading="lazy" />
+}
+
 const badgeIcons = {
   Python: PythonIcon,
   JavaScript: JavaScriptIcon,
@@ -212,6 +238,8 @@ export default function App() {
   const [themeTransition, setThemeTransition] = useState(null)
   const [heroReady, setHeroReady] = useState(false)
   const [activeSection, setActiveSection] = useState('hero')
+  const [githubRepos, setGithubRepos] = useState([])
+  const [githubState, setGithubState] = useState('loading')
 
   const reducedMotion = useMemo(() => {
     if (typeof window === 'undefined') return true
@@ -226,6 +254,39 @@ export default function App() {
     const nextTheme = storedTheme === 'light' || storedTheme === 'dark' ? storedTheme : preferredTheme
 
     setTheme(nextTheme)
+  }, [])
+
+  useEffect(() => {
+    let cancelled = false
+
+    async function loadGitHubProjects() {
+      try {
+        const response = await fetch('https://api.github.com/users/The-Agaba/repos?per_page=100&sort=updated')
+        if (!response.ok) throw new Error('GitHub repositories could not be loaded')
+        const repositories = await response.json()
+        const visibleRepos = repositories.filter((repo) => !repo.fork && !repo.archived)
+        const projectsWithReadmes = await Promise.all(visibleRepos.map(async (repo) => {
+          try {
+            const readmeResponse = await fetch(`https://api.github.com/repos/${repo.full_name}/readme`)
+            if (!readmeResponse.ok) return { ...repo, readme: '' }
+            const readme = await readmeResponse.json()
+            const markdown = atob(readme.content.replaceAll('\n', ''))
+            return { ...repo, readme: decodeURIComponent(escape(markdown)) }
+          } catch {
+            return { ...repo, readme: '' }
+          }
+        }))
+        if (!cancelled) {
+          setGithubRepos(projectsWithReadmes)
+          setGithubState('ready')
+        }
+      } catch {
+        if (!cancelled) setGithubState('error')
+      }
+    }
+
+    loadGitHubProjects()
+    return () => { cancelled = true }
   }, [])
 
   useEffect(() => {
@@ -466,12 +527,11 @@ export default function App() {
         <section className="ticker" aria-label="Capabilities">
           <div className="ticker-track ticker-badges">
             {Array.from({ length: 2 }).flatMap((_, cycleIndex) =>
-              techBadges.map(({ name, label, accent }, badgeIndex) => {
-                const Icon = badgeIcons[name]
+              techBadges.map(({ name, label, accent, icon }, badgeIndex) => {
                 return (
                   <span className="tech-badge" key={`${cycleIndex}-${badgeIndex}-${name}`} style={{ '--badge-accent': accent }}>
                     <span className="tech-badge-icon" aria-hidden="true">
-                      <Icon />
+                      <OfficialTechIcon icon={icon} label={label} />
                     </span>
                     <span className="tech-badge-label">{label}</span>
                   </span>
@@ -530,12 +590,12 @@ export default function App() {
 
           <div className="skill-badge-grid">
             {skillTracks.map((skill) => {
-              const Icon = badgeIcons[skill.iconKey]
+              const techBadge = techBadges.find((badge) => badge.name === skill.iconKey)
               return (
                 <article className="skill-badge-card" data-reveal-card key={skill.name}>
                   <div className="skill-badge-head">
                     <span className="tech-badge-icon" aria-hidden="true">
-                      <Icon />
+                      <OfficialTechIcon icon={techBadge.icon} label={skill.name} />
                     </span>
                     <h3>{skill.name}</h3>
                   </div>
@@ -580,6 +640,33 @@ export default function App() {
           </div>
         </section>
 
+        <section className="section github-section" id="github">
+          <div className="section-title-wrap">
+            <p className="section-label">Live from GitHub</p>
+            <h2>Every project, in one place.</h2>
+          </div>
+          <p className="github-intro">A live collection of my public repositories, with each README available to explore without leaving this portfolio.</p>
+          {githubState === 'loading' && <div className="github-status" role="status"><span className="status-pulse" /> Loading repositories from GitHub…</div>}
+          {githubState === 'error' && <div className="github-status error" role="alert">GitHub is temporarily unavailable. <a href="https://github.com/The-Agaba" target="_blank" rel="noreferrer">Browse the profile directly ↗</a></div>}
+          {githubState === 'ready' && (
+            <div className="github-repo-grid">
+              {githubRepos.length === 0 && <div className="github-status">No public repositories found yet.</div>}
+              {githubRepos.map((repo, index) => (
+                <article className="github-repo-card is-visible" data-reveal-card key={repo.id}>
+                  <div className="repo-card-top"><span className="project-number">{String(index + 1).padStart(2, '0')}</span><span className="repo-language">{repo.language || 'Code'}</span></div>
+                  <h3>{repo.name}</h3>
+                  <p>{repo.description || 'A project from my GitHub workspace.'}</p>
+                  <div className="repo-meta"><span>★ {repo.stargazers_count}</span><span>⑂ {repo.forks_count}</span><span>Updated {new Date(repo.updated_at).toLocaleDateString()}</span></div>
+                  <div className="repo-actions">
+                    <a className="btn small secondary" href={repo.html_url} target="_blank" rel="noreferrer">View repository ↗</a>
+                    {repo.readme && <details><summary>Read README</summary><pre>{repo.readme}</pre></details>}
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
+
         <section className="section contact-section" id="contact">
           <div className="contact-panel">
             <div className="section-title-wrap">
@@ -591,6 +678,10 @@ export default function App() {
               <a className="icon-btn" data-reveal-card href="mailto:collinraymund403@gmail.com" aria-label="Email Collin Agaba Raymund">
                 <EmailIcon />
                 <span>Email</span>
+              </a>
+              <a className="icon-btn whatsapp-link" data-reveal-card href={whatsappUrl} target="_blank" rel="noreferrer" aria-label="Message Collin Agaba Raymund on WhatsApp">
+                <WhatsAppIcon />
+                <span>WhatsApp</span>
               </a>
               <a className="icon-btn" data-reveal-card href="https://github.com/The-Agaba" target="_blank" rel="noreferrer" aria-label="Open GitHub profile">
                 <GitHubIcon />
