@@ -859,7 +859,7 @@
   font-weight: 700;
 }
 
-.repo-actions pre {
+.readme-content {
   max-height: 22rem;
   overflow: auto;
   margin: 0.85rem 0 0;
@@ -867,8 +867,81 @@
   border-radius: 12px;
   background: var(--surface-strong);
   color: var(--muted);
-  font: 0.74rem/1.65 ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.78rem;
+  line-height: 1.65;
+}
+
+.readme-content h1,
+.readme-content h2,
+.readme-content h3,
+.readme-content h4 {
+  margin: 0.85rem 0 0.45rem;
+  color: var(--text);
+  font-family: var(--font-display);
+  letter-spacing: -0.03em;
+}
+
+.readme-content h1 { font-size: 1.35rem; }
+.readme-content h2 { font-size: 1.15rem; }
+.readme-content h3,
+.readme-content h4 { font-size: 1rem; }
+
+.readme-content p {
+  margin: 0.55rem 0;
+}
+
+.readme-content ul,
+.readme-content ol {
+  margin: 0.55rem 0;
+  padding-left: 1.2rem;
+}
+
+.readme-content li {
+  margin: 0.25rem 0;
+}
+
+.readme-content a {
+  color: var(--accent);
+}
+
+.readme-content code {
+  padding: 0.12rem 0.3rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  font: 0.72rem ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.readme-content pre {
+  overflow-x: auto;
+  margin: 0.7rem 0;
+  padding: 0.75rem;
+  border-radius: 9px;
+  background: rgba(0, 0, 0, 0.24);
   white-space: pre-wrap;
+}
+
+.readme-content pre code {
+  padding: 0;
+  background: transparent;
+}
+
+.readme-content blockquote {
+  margin: 0.7rem 0;
+  padding-left: 0.75rem;
+  border-left: 2px solid var(--accent);
+}
+
+.readme-content hr {
+  border: 0;
+  border-top: 1px solid var(--card-border);
+}
+
+.readme-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0.7rem 0;
 }
 
 @keyframes status-pulse {

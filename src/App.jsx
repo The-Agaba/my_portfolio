@@ -218,6 +218,94 @@ function OfficialTechIcon({ icon, label }) {
   return <img src={officialIcons[icon]} alt={`${label} official icon`} loading="lazy" />
 }
 
+function renderInlineMarkdown(text, keyPrefix) {
+  const tokenPattern = /(`[^`]+`|!\[[^\]]*\]\([^)]*\)|\[[^\]]+\]\([^)]*\)|\*\*[^*]+\*\*|__[^_]+__|\*[^*]+\*|_[^_]+_)/g
+  return text.split(tokenPattern).filter(Boolean).map((token, index) => {
+    const key = `${keyPrefix}-${index}`
+    if (token.startsWith('![')) {
+      const match = token.match(/^!\[([^\]]*)\]\(([^)]+)\)$/)
+      return match ? <img className="readme-image" key={key} src={match[2]} alt={match[1]} loading="lazy" /> : token
+    }
+    if (token.startsWith('[')) {
+      const match = token.match(/^\[([^\]]+)\]\(([^)]+)\)$/)
+      return match ? <a key={key} href={match[2]} target="_blank" rel="noreferrer">{match[1]}</a> : token
+    }
+    if (token.startsWith('`')) return <code key={key}>{token.slice(1, -1)}</code>
+    if (token.startsWith('**') || token.startsWith('__')) return <strong key={key}>{token.slice(2, -2)}</strong>
+    if (token.startsWith('*') || token.startsWith('_')) return <em key={key}>{token.slice(1, -1)}</em>
+    return token
+  })
+}
+
+function renderMarkdown(markdown) {
+  const lines = markdown.replaceAll('\r', '').split('\n')
+  const blocks = []
+  let paragraph = []
+  let list = []
+  let ordered = false
+  let code = null
+
+  const flushParagraph = () => {
+    if (paragraph.length) {
+      blocks.push(<p key={`p-${blocks.length}`}>{renderInlineMarkdown(paragraph.join(' '), `p-${blocks.length}`)}</p>)
+      paragraph = []
+    }
+  }
+  const flushList = () => {
+    if (list.length) {
+      const List = ordered ? 'ol' : 'ul'
+      blocks.push(<List key={`list-${blocks.length}`}>{list.map((item, index) => <li key={index}>{renderInlineMarkdown(item, `list-${blocks.length}-${index}`)}</li>)}</List>)
+      list = []
+      ordered = false
+    }
+  }
+
+  lines.forEach((line, index) => {
+    if (line.trim().startsWith('```')) {
+      flushParagraph(); flushList()
+      if (code) {
+        blocks.push(<pre key={`code-${index}`}><code>{code.lines.join('\n')}</code></pre>)
+        code = null
+      } else {
+        code = { language: line.trim().slice(3), lines: [] }
+      }
+      return
+    }
+    if (code) { code.lines.push(line); return }
+    if (!line.trim()) { flushParagraph(); flushList(); return }
+
+    const heading = line.match(/^(#{1,4})\s+(.+)$/)
+    if (heading) {
+      flushParagraph(); flushList()
+      const Heading = `h${heading[1].length}`
+      blocks.push(<Heading key={`heading-${index}`}>{renderInlineMarkdown(heading[2], `heading-${index}`)}</Heading>)
+      return
+    }
+    const unordered = line.match(/^\s*[-*+]\s+(.+)$/)
+    const numbered = line.match(/^\s*\d+[.)]\s+(.+)$/)
+    if (unordered || numbered) {
+      flushParagraph()
+      const nextOrdered = Boolean(numbered)
+      if (list.length && ordered !== nextOrdered) flushList()
+      ordered = nextOrdered
+      list.push((unordered || numbered)[1])
+      return
+    }
+    if (/^\s*>/.test(line)) {
+      flushParagraph(); flushList()
+      blocks.push(<blockquote key={`quote-${index}`}>{renderInlineMarkdown(line.replace(/^\s*>\s?/, ''), `quote-${index}`)}</blockquote>)
+      return
+    }
+    if (/^\s*([-*_])\s*\1\s*\1\s*$/.test(line)) { flushParagraph(); flushList(); blocks.push(<hr key={`hr-${index}`} />); return }
+    flushList()
+    paragraph.push(line.trim())
+  })
+
+  if (code) blocks.push(<pre key="code-final"><code>{code.lines.join('\n')}</code></pre>)
+  flushParagraph(); flushList()
+  return blocks
+}
+
 const badgeIcons = {
   Python: PythonIcon,
   JavaScript: JavaScriptIcon,
@@ -659,7 +747,7 @@ export default function App() {
                   <div className="repo-meta"><span>★ {repo.stargazers_count}</span><span>⑂ {repo.forks_count}</span><span>Updated {new Date(repo.updated_at).toLocaleDateString()}</span></div>
                   <div className="repo-actions">
                     <a className="btn small secondary" href={repo.html_url} target="_blank" rel="noreferrer">View repository ↗</a>
-                    {repo.readme && <details><summary>Read README</summary><pre>{repo.readme}</pre></details>}
+                    {repo.readme && <details><summary>Read README</summary><div className="readme-content">{renderMarkdown(repo.readme)}</div></details>}
                   </div>
                 </article>
               ))}
